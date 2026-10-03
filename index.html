@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园流浪猫管理系统 · 亮色系</title>
+    <!-- Font Awesome 5 (icons) 用于更好的视觉 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #fff9f0 0%, #fef6e9 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+            color: #3e2e1f;
+        }
+
+        /* 主容器 */
+        .app-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* 头部区域 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 1.2rem 2rem;
+            border-radius: 60px;
+            box-shadow: 0 10px 25px rgba(235, 180, 120, 0.15), 0 4px 10px rgba(255, 215, 150, 0.1);
+            border: 1px solid #ffe8d0;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #b45f2b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: #ff9f4b;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff5ea;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            border: 1px solid #ffe0c0;
+            font-weight: 500;
+            color: #7b4d2c;
+        }
+
+        .stat-item i {
+            color: #ff9f4b;
+            font-size: 1.2rem;
+        }
+
+        /* 主要网格布局 */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* 卡片通用样式 */
+        .card {
+            background: #ffffff;
+            border-radius: 36px;
+            padding: 1.8rem 1.8rem 2rem;
+            box-shadow: 0 20px 35px -8px rgba(220, 170, 120, 0.2), 0 5px 15px rgba(255, 210, 150, 0.1);
+            border: 1px solid #ffe9d4;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 25px 40px -10px rgba(240, 170, 100, 0.25);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #a35e2e;
+            margin-bottom: 1.6rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px dashed #ffd9b5;
+        }
+
+        .card-title i {
+            color: #ff9f4b;
+            font-size: 1.6rem;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 1.4rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #7c5b40;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 30px;
+            border: 1.5px solid #ffdbbf;
+            background: #fffcf8;
+            font-size: 0.95rem;
+            color: #3e2e1f;
+            transition: 0.15s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ffa559;
+            box-shadow: 0 0 0 4px rgba(255, 170, 90, 0.15);
+            background: #ffffff;
+        }
+
+        textarea.form-control {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        /* 上传图片区域 */
+        .image-upload-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .upload-btn {
+            background: #fff2e5;
+            border: 1.5px dashed #ffb47b;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            color: #b45f2b;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .upload-btn:hover {
+            background: #ffe6d3;
+            border-color: #ff8c3a;
+        }
+
+        .upload-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #b48b64;
+            font-size: 0.9rem;
+        }
+
+        .preview-thumb {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            object-fit: cover;
+            border: 2px solid #ffe0c0;
+            background: #f5ede4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccaa8a;
+            font-size: 1.2rem;
+        }
+
+        /* 按钮 */
+        .btn-primary {
+            background: linear-gradient(145deg, #ffad60, #ff9436);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 12px 20px -8px rgba(255, 140, 40, 0.4);
+            border: 1px solid #ffb87a;
+            letter-spacing: 0.5px;
+            margin-top: 0.8rem;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(145deg, #ffa04d, #f1882b);
+            transform: scale(1.01);
+            box-shadow: 0 15px 25px -8px rgba(255, 130, 20, 0.5);
+        }
+
+        /* 左侧列表：已记录的猫咪 */
+        .cat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .cat-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cat-list::-webkit-scrollbar-thumb {
+            background: #ffd2b0;
+            border-radius: 10px;
+        }
+
+        .cat-card-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: #fffaf5;
+            border-radius: 26px;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid #ffebdb;
+            transition: 0.15s;
+            box-shadow: 0 4px 8px rgba(255, 210, 170, 0.1);
+        }
+
+        .cat-card-item:hover {
+            background: #ffffff;
+            border-color: #ffcdad;
+            box-shadow: 0 10px 18px rgba(255, 180, 110, 0.15);
+        }
+
+        .cat-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 3px solid #ffe2cc;
+            background: #f3e7dd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c9a27b;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .cat-info {
+            flex: 1;
+        }
+
+        .cat-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #6f3f1a;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .cat-badge {
+            font-size: 0.7rem;
+            background: #ffe1c6;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #b45f2b;
+            letter-spacing: 0.3px;
+        }
+
+        .cat-badge.rescue {
+            background: #ffd7d7;
+            color: #b33b3b;
+        }
+
+        .cat-desc {
+            font-size: 0.85rem;
+            color: #947358;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+
+        .cat-location {
+            font-size: 0.85rem;
+            color: #947358;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cat-location i {
+            color: #ffa559;
+            font-size: 0.8rem;
+        }
+
+        .cat-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vote-btn {
+            background: #fff2e5;
+            border: 1px solid #ffcfaa;
+            border-radius: 30px;
+            padding: 0.45rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #b45f2b;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.15s;
+            white-space: nowrap;
+        }
+
+        .vote-btn i {
+            color: #ff8c3a;
+        }
+
+        .vote-btn:hover {
+            background: #ffdec2;
+            border-color: #ff9f4b;
+        }
+
+        /* 选美排行榜区域 */
+        .beauty-section {
+            margin-top: 2rem;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            margin-top: 0.8rem;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.7rem 1rem;
+            background: #fffaf5;
+            border-radius: 40px;
+            border: 1px solid #ffebdb;
+        }
+
+        .rank-pos {
+            font-weight: 700;
+            font-size: 1.2rem;
+            width: 32px;
+            color: #b45f2b;
+            text-align: center;
+        }
+
+        .rank-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            object-fit: cover;
+            background: #f3e7dd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c9a27b;
+            font-size: 1.2rem;
+            border: 2px solid #ffe2cc;
+        }
+
+        .rank-name {
+            flex: 1;
+            font-weight: 600;
+            color: #6f3f1a;
+        }
+
+        .rank-likes {
+            font-weight: 600;
+            color: #ff8c3a;
+            background: #fff0e3;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* 提示消息 */
+        .toast-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #6f3f1a;
+            color: #fff6ed;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 999;
+            border: 1px solid #ffb87a;
+        }
+
+        .toast-message.show {
+            opacity: 1;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            color: #b99e87;
+            padding: 2rem 1rem;
+            font-style: italic;
+        }
+
+        /* 第二列布局调整 */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* 救助标记辅助 */
+        .rescue-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fffaf5;
+            padding: 0.6rem 1rem;
+            border-radius: 30px;
+            border: 1px solid #ffebdb;
+        }
+
+        .rescue-checkbox-group input {
+            width: 20px;
+            height: 20px;
+            accent-color: #ff8c3a;
+            cursor: pointer;
+        }
+
+        .rescue-checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+            color: #7c5b40;
+            cursor: pointer;
+        }
+
+        /* 图片预览简单显示 */
+        .img-preview-sm {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1100px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                border-radius: 40px;
+            }
+            .header-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <!-- 头部 -->
+    <header class="header">
+        <div class="logo">
+            <h1><i class="fas fa-paw"></i> 校园流浪猫 · 守护站</h1>
+        </div>
+        <div class="header-stats">
+            <div class="stat-item"><i class="fas fa-cat"></i> <span id="totalCats">0</span> 只猫咪</div>
+            <div class="stat-item"><i class="fas fa-heart"></i> <span id="totalLikes">0</span> 次点赞</div>
+            <div class="stat-item"><i class="fas fa-hand-holding-heart"></i> <span id="rescueNeeded">0</span> 只需救助</div>
+        </div>
+    </header>
+
+    <!-- 主面板 -->
+    <div class="dashboard">
+        <!-- 左列: 猫咪档案列表 & 选美排行 -->
+        <div class="left-column">
+            <!-- 猫咪列表卡片 -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-list-ul"></i> 猫咪档案
+                </div>
+                <div id="catListContainer" class="cat-list">
+                    <!-- 动态渲染猫咪列表 -->
+                    <div class="empty-state">还没有猫咪记录，快在右侧添加吧~</div>
+                </div>
+            </div>
+
+            <!-- 选美排行榜 -->
+            <div class="card beauty-section" style="margin-top: 1.8rem;">
+                <div class="card-title">
+                    <i class="fas fa-crown"></i> 选美人气榜
+                </div>
+                <div id="rankingList" class="ranking-list">
+                    <div class="empty-state">暂无点赞数据，快去给猫咪点赞吧 🐱</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右列: 添加记录表单 -->
+        <div class="right-column">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-plus-circle"></i> 记录新猫咪
+                </div>
+                <form id="catForm">
+                    <!-- 名字 -->
+                    <div class="form-group">
+                        <label><i class="fas fa-tag" style="color:#ff9f4b;"></i> 猫咪名字 / 昵称</label>
+                        <input type="text" class="form-control" id="catName" placeholder="例如：橘座、三花、煤球" required>
+                    </div>
+                    <!-- 体貌特征 -->
+                    <div class="form-group">
+                        <label><i class="fas fa-palette" style="color:#ff9f4b;"></i> 体貌特征</label>
+                        <textarea class="form-control" id="catFeatures" placeholder="毛色、瞳色、体型、特殊标记等..." required></textarea>
+                    </div>
+                    <!-- 图片上传（模拟） -->
+                    <div class="form-group">
+                        <label><i class="fas fa-image" style="color:#ff9f4b;"></i> 上传照片</label>
+                        <div class="image-upload-area">
+                            <div class="upload-btn" id="uploadBtn">
+                                <i class="fas fa-cloud-upload-alt"></i> 选择图片
+                            </div>
+                            <div class="upload-preview" id="uploadPreview">
+                                <div class="preview-thumb"><i class="fas fa-cat"></i></div>
+                                <span>未选择图片</span>
+                            </div>
+                            <input type="file" id="catImage" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    <!-- 上次目击地点 -->
+                    <div class="form-group">
+                        <label><i class="fas fa-map-pin" style="color:#ff9f4b;"></i> 上次目击地点</label>
+                        <input type="text" class="form-control" id="lastLocation" placeholder="例如：图书馆后门、三食堂花坛" required>
+                    </div>
+                    <!-- 是否需要救助 -->
+                    <div class="form-group">
+                        <label><i class="fas fa-briefcase-medical" style="color:#ff9f4b;"></i> 是否需要救助</label>
+                        <div class="rescue-checkbox-group">
+                            <input type="checkbox" id="needsRescue">
+                            <label for="needsRescue">需要救助 / 医疗关注</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary"><i class="fas fa-save"></i> 保存猫咪档案</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 轻提示 -->
+<div id="toast" class="toast-message">操作成功</div>
+
+<script>
+    (function() {
+        // ---------- 数据存储 (localStorage) ----------
+        const STORAGE_KEY = 'campus_cats_data';
+
+        // 默认初始数据 (为了让页面一打开就有一些示例)
+        const defaultCats = [
+            {
+                id: 'cat1',
+                name: '橘座',
+                features: '橘色虎斑，体型圆润，尾巴短，右耳有缺口',
+                image: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\' viewBox=\'0 0 80 80\'%3E%3Crect width=\'80\' height=\'80\' fill=\'%23ffe2cc\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'40\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23b45f2b\'%3E🐱%3C/text%3E%3C/svg%3E',
+                lastLocation: '图书馆后门',
+                needsRescue: false,
+                likes: 12
+            },
+            {
+                id: 'cat2',
+                name: '三花',
+                features: '白底黑黄花斑，异瞳(一蓝一黄)，戴粉色项圈',
+                image: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\' viewBox=\'0 0 80 80\'%3E%3Crect width=\'80\' height=\'80\' fill=\'%23ffe8d0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'40\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23b45f2b\'%3E🐈%3C/text%3E%3C/svg%3E',
+                lastLocation: '三食堂花坛',
+                needsRescue: true,
+                likes: 8
+            },
+            {
+                id: 'cat3',
+                name: '煤球',
+                features: '全黑，绿眼睛，怕人但会蹭饭',
+                image: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\' viewBox=\'0 0 80 80\'%3E%3Crect width=\'80\' height=\'80\' fill=\'%23f0d5bb\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' font-size=\'40\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%233e2e1f\'%3E🐈‍⬛%3C/text%3E%3C/svg%3E',
+                lastLocation: '操场看台后面',
+                needsRescue: false,
+                likes: 20
+            }
+        ];
+
+        // 当前猫咪数组
+        let cats = [];
+
+        // 加载数据
+        function loadCats() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    cats = JSON.parse(stored);
+                } catch (e) {
+                    cats = [...defaultCats];
+                }
+            } else {
+                cats = [...defaultCats];
+            }
+            // 确保每个猫都有 likes 字段
+            cats = cats.map(c => ({ ...c, likes: c.likes || 0 }));
+            saveCats();
+        }
+
+        // 保存到 localStorage
+        function saveCats() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(cats));
+        }
+
+        // ---------- 渲染全局统计数据 ----------
+        function updateStats() {
+            document.getElementById('totalCats').textContent = cats.length;
+            const totalLikes = cats.reduce((acc, cur) => acc + (cur.likes || 0), 0);
+            document.getElementById('totalLikes').textContent = totalLikes;
+            const rescueCount = cats.filter(c => c.needsRescue).length;
+            document.getElementById('rescueNeeded').textContent = rescueCount;
+        }
+
+        // ---------- 渲染猫咪列表 ----------
+        function renderCatList() {
+            const container = document.getElementById('catListContainer');
+            if (!cats.length) {
+                container.innerHTML = '<div class="empty-state">还没有猫咪记录，快在右侧添加吧~</div>';
+                return;
+            }
+
+            // 按创建顺序或点赞排序? 展示时保持输入顺序，但也可以按id排序 (按添加顺序)
+            // 为了视觉友好，按点赞从高到低？但列表是档案，还是保持原本顺序（或者让最新的在上面）
+            // 我们让最新的在上面 (但为了美观，反转一下)
+            const sortedForList = [...cats].reverse();
+
+            let html = '';
+            sortedForList.forEach(cat => {
+                const rescueBadge = cat.needsRescue
+                    ? '<span class="cat-badge rescue"><i class="fas fa-ambulance"></i> 需救助</span>'
+                    : '<span class="cat-badge"><i class="fas fa-check-circle"></i> 状态稳定</span>';
+
+                // 处理图片显示：如果 cat.image 是有效url/base64，用img，否则用默认图标
+                const imgHtml = cat.image && cat.image.startsWith('data:image')
+                    ? `<img src="${cat.image}" class="cat-avatar" alt="猫咪照片" style="object-fit: cover;">`
+                    : `<div class="cat-avatar"><i class="fas fa-cat"></i></div>`;
+
+                html += `
+                    <div class="cat-card-item" data-id="${cat.id}">
+                        ${imgHtml}
+                        <div class="cat-info">
+                            <div class="cat-name">
+                                ${escapeHtml(cat.name)} ${rescueBadge}
+                            </div>
+                            <div class="cat-desc">
+                                <span><i class="fas fa-paw"></i> ${escapeHtml(cat.features.length > 30 ? cat.features.substring(0,30)+'…' : cat.features)}</span>
+                            </div>
+                            <div class="cat-location">
+                                <i class="fas fa-map-marker-alt"></i> ${escapeHtml(cat.lastLocation)}
+                            </div>
+                        </div>
+                        <div class="cat-actions">
+                            <button class="vote-btn" data-id="${cat.id}" data-action="like">
+                                <i class="fas fa-heart"></i> ${cat.likes || 0}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // 为每个点赞按钮绑定事件
+            container.querySelectorAll('.vote-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = btn.dataset.id;
+                    likeCat(id);
+                });
+            });
+        }
+
+        // 简单的防XSS
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text).replace(/[&<>"]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return m;
+            });
+        }
+
+        // ---------- 渲染选美排行榜 (按点赞降序) ----------
+        function renderRanking() {
+            const container = document.getElementById('rankingList');
+            if (!cats.length) {
+                container.innerHTML = '<div class="empty-state">暂无点赞数据，快去给猫咪点赞吧 🐱</div>';
+                return;
+            }
+
+            // 按点赞降序排序，取前5
+            const sorted = [...cats].sort((a, b) => (b.likes || 0) - (a.likes || 0)).slice(0, 5);
+
+            let html = '';
+            sorted.forEach((cat, index) => {
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index+1);
+                // 处理图片
+                const avatarHtml = cat.image && cat.image.startsWith('data:image')
+                    ? `<img src="${cat.image}" class="rank-avatar" alt="头像" style="object-fit: cover;">`
+                    : `<div class="rank-avatar"><i class="fas fa-cat"></i></div>`;
+
+                html += `
+                    <div class="rank-item">
+                        <div class="rank-pos">${medal}</div>
+                        ${avatarHtml}
+                        <div class="rank-name">${escapeHtml(cat.name)}</div>
+                        <div class="rank-likes"><i class="fas fa-heart" style="color:#ff8c3a;"></i> ${cat.likes || 0}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ---------- 点赞功能 ----------
+        function likeCat(id) {
+            const cat = cats.find(c => c.id === id);
+            if (cat) {
+                cat.likes = (cat.likes || 0) + 1;
+                saveCats();
+                renderAll();
+                showToast(`❤️ 给 ${cat.name} 点了一个赞！`);
+            }
+        }
+
+        // 全局渲染
+        function renderAll() {
+            updateStats();
+            renderCatList();
+            renderRanking();
+        }
+
+        // ---------- 轻提示 ----------
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // ---------- 图片上传预览 ----------
+        function setupImageUpload() {
+            const uploadBtn = document.getElementById('uploadBtn');
+            const fileInput = document.getElementById('catImage');
+            const previewDiv = document.getElementById('uploadPreview');
+
+            uploadBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('image/')) {
+                    showToast('请选择图片文件');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const dataUrl = ev.target.result;
+                    // 更新预览
+                    previewDiv.innerHTML = `
+                        <img src="${dataUrl}" class="preview-thumb" style="object-fit: cover;">
+                        <span>${file.name.length > 20 ? file.name.substr(0,18)+'…' : file.name}</span>
+                    `;
+                    // 把图片暂存到 fileInput 的自定义属性上 (或者 dataset)
+                    fileInput.dataset.imageData = dataUrl;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ---------- 表单提交: 添加新猫咪 ----------
+        function setupForm() {
+            const form = document.getElementById('catForm');
+            const fileInput = document.getElementById('catImage');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('catName').value.trim();
+                const features = document.getElementById('catFeatures').value.trim();
+                const lastLocation = document.getElementById('lastLocation').value.trim();
+                const needsRescue = document.getElementById('needsRescue').checked;
+
+                if (!name || !features || !lastLocation) {
+                    showToast('请填写名字、特征和目击地点');
+                    return;
+                }
+
+                // 获取图片数据 (如果有)
+                let imageData = fileInput.dataset.imageData || '';
+                // 如果没有上传图片，生成一个默认的猫猫占位图（用SVG DataURL）
+                if (!imageData) {
+                    // 根据名字随机颜色 或者 直接用默认
+                    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'><rect width='80' height='80' fill='%23ffe2cc'/><text x='50%25' y='50%25' font-size='40' text-anchor='middle' dy='.3em' fill='%23b45f2b'>🐱</text></svg>`;
+                    imageData = `data:image/svg+xml,${svg}`;
+                }
+
+                // 创建新猫对象
+                const newCat = {
+                    id: 'cat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+                    name: name,
+                    features: features,
+                    image: imageData,
+                    lastLocation: lastLocation,
+                    needsRescue: needsRescue,
+                    likes: 0
+                };
+
+                cats.push(newCat);
+                saveCats();
+                renderAll();
+
+                // 重置表单
+                form.reset();
+                // 清除图片预览和暂存
+                document.getElementById('uploadPreview').innerHTML = `
+                    <div class="preview-thumb"><i class="fas fa-cat"></i></div>
+                    <span>未选择图片</span>
+                `;
+                delete fileInput.dataset.imageData;
+                fileInput.value = ''; // 清空文件
+
+                showToast(`🎉 已保存 ${name} 的档案`);
+            });
+        }
+
+        // ---------- 页面初始化 ----------
+        function init() {
+            loadCats();
+            setupImageUpload();
+            setupForm();
+            renderAll();
+
+            // 额外: 为每个猫卡片上的点赞按钮已经通过 renderCatList 绑定
+            // 但是有可能动态新增，但 renderCatList 每次重新绑定没问题。
+        }
+
+        // 启动
+        init();
+    })();
+</script>
+</body>
+</html>
